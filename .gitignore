@@ -1,0 +1,6 @@
+# Event Ticketing Web App
+# User data seed file (contains placeholder passwords, created through registration)
+SeedData/
+
+# User secrets and config
+*.user*
