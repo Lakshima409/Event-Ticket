@@ -1,0 +1,239 @@
+@model EventTicketingWebApp.Controllers.EventDetailViewModel
+@{
+    ViewData["Title"] = $"{Model.Title} - ETicketing System";
+}
+
+<!-- Main Content -->
+<main class="main-content event-detail-main">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a asp-controller="Event" asp-action="Index">Events</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>@Model.Title</span>
+        </nav>
+
+        <!-- Event Detail Section -->
+        <section class="event-detail-section">
+            <div class="event-detail-grid">
+                <!-- Event Image -->
+                <div class="event-image-container">
+                    <img src="@Model.ImageUrl" alt="@Model.Title" class="event-detail-image">
+                    <div class="event-badge">@Model.Category.ToUpper()</div>
+                </div>
+
+                <!-- Event Info -->
+                <div class="event-info">
+                    <h1>@Model.Title</h1>
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>@Model.Date.ToString("dddd, MMMM dd, yyyy")</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>@Model.Time</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@Model.Location</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>@Model.Venue</span>
+                        </div>
+                    </div>
+                    
+                    <div class="event-description">
+                        <h3>About This Event</h3>
+                        <p>@Model.Description</p>
+                    </div>
+
+                    <!-- Ticket Categories -->
+                    <div class="ticket-categories">
+                        <h3>Ticket Options</h3>
+                        <div class="ticket-grid">
+                            <div class="ticket-category">
+                                <div class="ticket-header">
+                                    <h4>NORMAL</h4>
+                                    <div class="ticket-price">$@Model.NormalPrice.ToString("F0")</div>
+                                </div>
+                                <div class="ticket-info">
+                                    <div class="remaining-seats">
+                                        <i class="fas fa-chair"></i>
+                                        <span>45 seats remaining</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary buy-ticket-btn" data-category="normal" data-price="@Model.NormalPrice">Buy Now</button>
+                            </div>
+                            
+                            <div class="ticket-category">
+                                <div class="ticket-header">
+                                    <h4>VIP</h4>
+                                    <div class="ticket-price">$@Model.VipPrice.ToString("F0")</div>
+                                </div>
+                                <div class="ticket-info">
+                                    <div class="remaining-seats">
+                                        <i class="fas fa-chair"></i>
+                                        <span>12 seats remaining</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary buy-ticket-btn" data-category="vip" data-price="@Model.VipPrice">Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organizer Details -->
+        <section class="organizer-section">
+            <div class="section-header">
+                <h2>Event Organizer</h2>
+            </div>
+            <div class="organizer-card">
+                <div class="organizer-info">
+                    <div class="organizer-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="organizer-details">
+                        <h3>@Model.OrganizerName</h3>
+                        <p>@Model.OrganizerDescription</p>
+                        <div class="organizer-contact">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>@Model.OrganizerEmail</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>@Model.OrganizerPhone</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-globe"></i>
+                                <span>@Model.OrganizerWebsite</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Highlights -->
+        <section class="highlights-section">
+            <div class="section-header">
+                <h2>Event Highlights</h2>
+            </div>
+            <div class="highlights-grid">
+                <div class="highlight-item">
+                    <i class="fas fa-star"></i>
+                    <h4>Premium Experience</h4>
+                    <p>Enjoy a world-class event with top-notch production quality</p>
+                </div>
+                <div class="highlight-item">
+                    <i class="fas fa-users"></i>
+                    <h4>Social Gathering</h4>
+                    <p>Connect with like-minded people and share amazing moments</p>
+                </div>
+                <div class="highlight-item">
+                    <i class="fas fa-camera"></i>
+                    <h4>Photo Opportunities</h4>
+                    <p>Capture memories with professional photo setups</p>
+                </div>
+                <div class="highlight-item">
+                    <i class="fas fa-utensils"></i>
+                    <h4>Refreshments</h4>
+                    <p>Complimentary drinks and snacks for VIP ticket holders</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Similar Events -->
+        <section class="similar-events-section">
+            <div class="section-header">
+                <h2>Similar Events</h2>
+                <a asp-controller="Event" asp-action="Index" class="view-all">View All Events <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="events-grid" id="similarEvents">
+                <!-- Similar events will be populated by JavaScript -->
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- Purchase Modal -->
+<div class="modal-overlay" id="purchaseModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Purchase Tickets</h3>
+            <button class="modal-close" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="ticket-summary">
+                <h4 id="modalEventTitle">@Model.Title</h4>
+                <div class="ticket-type">
+                    <span class="ticket-category-label" id="modalTicketType"></span>
+                    <span class="ticket-price-display" id="modalTicketPrice"></span>
+                </div>
+            </div>
+            <form class="purchase-form">
+                <div class="form-group">
+                    <label for="ticketQuantity">Number of Tickets</label>
+                    <select id="ticketQuantity">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email</label>
+                    <input type="email" id="customerEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone</label>
+                    <input type="tel" id="customerPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="total-section">
+                    <div class="total-row">
+                        <span>Ticket Price:</span>
+                        <span id="basePrice">$0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Quantity:</span>
+                        <span id="quantityDisplay">1</span>
+                    </div>
+                    <div class="total-row total">
+                        <span>Total:</span>
+                        <span id="totalPrice">$0</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary purchase-btn">
+                    <i class="fas fa-credit-card"></i> Complete Purchase
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/event-detail.js" asp-append-version="true"></script>
+    <script>
+        // Pass event data to JavaScript
+        window.eventData = {
+            id: @Model.Id,
+            title: '@Html.Raw(Model.Title)',
+            category: '@Model.Category',
+            normalPrice: @Model.NormalPrice,
+            vipPrice: @Model.VipPrice
+        };
+    </script>
+}

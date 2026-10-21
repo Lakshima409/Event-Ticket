@@ -1,0 +1,227 @@
+@{
+    ViewData["Title"] = "My Profile - ETicketing System";
+}
+
+<!-- Main Content -->
+<main class="main-content event-detail-main">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>My Profile</span>
+        </nav>
+
+        <!-- Profile Header -->
+        <section class="profile-header-section">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="profile-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name-section">
+                        <h1 id="userName">@(Context.Session.GetString("UserFullName") ?? "Customer")</h1>
+                    </div>
+                    <p id="userEmail">@(Context.Session.GetString("UserEmail") ?? "customer@example.com")</p>
+                    <p id="userMemberSince">Member since January 2024</p>
+                    <div class="loyalty-points-display">
+                        <div class="points-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="points-info">
+                            <span class="points-number" id="loyaltyPoints">1,250</span>
+                            <span class="points-label">Loyalty Points</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Content -->
+        <div class="profile-content-grid">
+            <!-- Left Column - Personal Information & Loyalty -->
+            <div class="profile-left-column">
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-user"></i> Personal Information</h2>
+                    </div>
+                    <div class="profile-card">
+                        <form class="profile-form" id="personalForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" value="John" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" value="Doe" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="@(Context.Session.GetString("UserEmail") ?? "customer@example.com")" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" value="+1 (555) 123-4567" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea id="address" rows="3" disabled>123 Main Street, Apt 4B, New York, NY 10001</textarea>
+                            </div>
+                            <div class="form-actions" id="personalFormActions" style="display: none;">
+                                <button type="button" class="btn btn-primary save-btn">Save Changes</button>
+                                <button type="button" class="btn btn-outline cancel-btn">Cancel</button>
+                            </div>
+                            <div class="update-details-section">
+                                <button class="btn btn-primary edit-btn" id="editPersonalBtn">
+                                    <i class="fas fa-edit"></i> Update Details
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-star"></i> Loyalty Points History</h2>
+                        <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="profile-card">
+                        <div class="loyalty-summary">
+                            <div class="current-points">
+                                <span class="points-label">Current Balance</span>
+                                <span class="points-value" id="currentPoints">1,250</span>
+                            </div>
+                            <div class="points-breakdown">
+                                <div class="points-earned">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Total Earned: 2,100</span>
+                                </div>
+                                <div class="points-redeemed">
+                                    <i class="fas fa-minus-circle"></i>
+                                    <span>Total Redeemed: 850</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="loyalty-history">
+                            <div class="history-item earned">
+                                <div class="history-icon">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                                <div class="history-content">
+                                    <h4>Ticket Purchase</h4>
+                                    <p>Rock Concert - Madison Square Garden</p>
+                                    <span class="points-change">+150 points</span>
+                                    <span class="history-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="history-item redeemed">
+                                <div class="history-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="history-content">
+                                    <h4>Reward Redeemed</h4>
+                                    <p>Free Drink Voucher</p>
+                                    <span class="points-change">-100 points</span>
+                                    <span class="history-time">1 day ago</span>
+                                </div>
+                            </div>
+                            <div class="history-item earned">
+                                <div class="history-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="history-content">
+                                    <h4>Event Attendance</h4>
+                                    <p>Jazz Night - Blue Note Club</p>
+                                    <span class="points-change">+75 points</span>
+                                    <span class="history-time">3 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column - Events & Account -->
+            <div class="profile-right-column">
+                <section class="profile-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-alt"></i> My Events</h2>
+                        <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="profile-card">
+                        <div class="events-tabs">
+                            <button class="tab-btn active" data-tab="upcoming">
+                                <i class="fas fa-calendar-alt"></i> Upcoming
+                            </button>
+                            <button class="tab-btn" data-tab="past">
+                                <i class="fas fa-calendar-check"></i> Past
+                            </button>
+                        </div>
+                        
+                        <div class="tab-content active" id="upcoming-tab">
+                            <div class="event-item upcoming">
+                                <div class="event-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4>Rock Concert</h4>
+                                    <p>Madison Square Garden</p>
+                                    <span class="event-date">Dec 15, 2024 - 8:00 PM</span>
+                                    <span class="ticket-type">VIP Ticket</span>
+                                    <button class="btn btn-outline view-ticket-btn">
+                                        <i class="fas fa-ticket-alt"></i> View E-Ticket
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="event-item upcoming">
+                                <div class="event-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4>Classical Symphony</h4>
+                                    <p>Carnegie Hall</p>
+                                    <span class="event-date">Dec 22, 2024 - 7:30 PM</span>
+                                    <span class="ticket-type">Normal Ticket</span>
+                                    <button class="btn btn-outline view-ticket-btn">
+                                        <i class="fas fa-ticket-alt"></i> View E-Ticket
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-content" id="past-tab">
+                            <div class="event-item past">
+                                <div class="event-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4>Jazz Night</h4>
+                                    <p>Blue Note Club</p>
+                                    <span class="event-date">Nov 28, 2024</span>
+                                </div>
+                            </div>
+                            <div class="event-item past">
+                                <div class="event-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4>Comedy Show</h4>
+                                    <p>Comedy Cellar</p>
+                                    <span class="event-date">Nov 15, 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="~/js/customer-profile.js" asp-append-version="true"></script>
+}

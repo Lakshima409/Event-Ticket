@@ -1,0 +1,770 @@
+@{
+    ViewData["Title"] = "Organizer Dashboard - ETicketing System";
+}
+
+<!-- Main Content -->
+<main class="main-content dashboard-main">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right"></i>
+            <a asp-controller="Organizer" asp-action="Profile">Organizer Profile</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Dashboard</span>
+        </nav>
+
+        <!-- Dashboard Header -->
+        <section class="dashboard-header">
+            <div class="dashboard-title">
+                <div class="welcome-section">
+                    <h1><i class="fas fa-chart-line"></i> Welcome back, @(Context.Session.GetString("UserFullName") ?? "EventPro")!</h1>
+                    <p class="dashboard-subtitle">Here's your performance overview for today</p>
+                </div>
+            </div>
+            <div class="dashboard-actions">
+                <button class="btn btn-primary btn-create-event">
+                    <i class="fas fa-plus"></i> Create New Event
+                </button>
+            </div>
+        </section>
+
+        <!-- Key Metrics -->
+        <section class="metrics-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Key Performance Indicators</h2>
+                <p>Track your business growth and performance metrics</p>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card primary">
+                    <div class="metric-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Total Revenue</h3>
+                        <span class="metric-value">$247,800</span>
+                    </div>
+                    <div class="metric-trend">
+                        <canvas id="revenueTrend" width="60" height="40"></canvas>
+                    </div>
+                </div>
+                <div class="metric-card success">
+                    <div class="metric-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Tickets Sold</h3>
+                        <span class="metric-value">12,450</span>
+                    </div>
+                    <div class="metric-trend">
+                        <canvas id="ticketsTrend" width="60" height="40"></canvas>
+                    </div>
+                </div>
+                <div class="metric-card info">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Total Attendees</h3>
+                        <span class="metric-value">8,920</span>
+                    </div>
+                    <div class="metric-trend">
+                        <canvas id="attendeesTrend" width="60" height="40"></canvas>
+                    </div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="metric-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Active Events</h3>
+                        <span class="metric-value">8</span>
+                    </div>
+                    <div class="metric-trend">
+                        <canvas id="eventsTrend" width="60" height="40"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-area"></i> Analytics & Insights</h2>
+                <p>Visualize your data and track trends over time</p>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-card main-chart">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h3><i class="fas fa-chart-line"></i> Revenue Trend</h3>
+                            <p>Track your revenue performance over time</p>
+                        </div>
+                        <div class="chart-controls">
+                            <div class="period-selector">
+                                <button class="period-btn active" data-period="7">7D</button>
+                                <button class="period-btn" data-period="30">30D</button>
+                                <button class="period-btn" data-period="90">90D</button>
+                                <button class="period-btn" data-period="365">1Y</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card side-chart">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h3><i class="fas fa-chart-pie"></i> Ticket Sales by Category</h3>
+                            <p>Distribution of ticket types sold</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="ticketCategoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Management -->
+        <section class="events-section">
+            <div class="section-header">
+                <div class="header-content">
+                    <h2><i class="fas fa-calendar-alt"></i> Event Management</h2>
+                    <p>Manage your upcoming, past, and draft events</p>
+                </div>
+                <div class="section-actions">
+                    <button class="btn btn-primary btn-create-event">
+                        <i class="fas fa-plus"></i> Create Event
+                    </button>
+                    <button class="btn btn-outline btn-filter">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+            
+            <div class="events-tabs">
+                <button class="tab-btn active" data-tab="upcoming">
+                    <i class="fas fa-calendar-alt"></i> 
+                    <span>Upcoming Events</span>
+                    <span class="tab-count">3</span>
+                </button>
+                <button class="tab-btn" data-tab="past">
+                    <i class="fas fa-calendar-check"></i> 
+                    <span>Past Events</span>
+                    <span class="tab-count">12</span>
+                </button>
+            </div>
+
+            <div class="tab-content active" id="upcoming-tab">
+                <div class="events-table">
+                    <div class="table-header">
+                        <div class="table-cell">Event Details</div>
+                        <div class="table-cell">Date & Time</div>
+                        <div class="table-cell">Venue</div>
+                        <div class="table-cell">Sales Progress</div>
+                        <div class="table-cell">Revenue</div>
+                        <div class="table-cell">Status</div>
+                        <div class="table-cell">Actions</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">
+                            <div class="event-info">
+                                <h4>Tech Conference 2024</h4>
+                                <p class="event-category">Technology & Innovation</p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Conference</span>
+                                    <span class="event-tag">Tech</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="date-time">
+                                <div class="date">Dec 20, 2024</div>
+                                <div class="time">9:00 AM - 6:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="venue-info">
+                                <div class="venue-name">Convention Center</div>
+                                <div class="venue-location">New York, NY</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="sales-progress">
+                                <div class="progress-info">
+                                    <span class="progress-text">342/500 sold</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 68%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="revenue-info">
+                                <div class="revenue-amount">$34,200</div>
+                                <div class="revenue-percentage">68% of target</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <span class="status-badge active">Active</span>
+                        </div>
+                        <div class="table-cell">
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline" title="Edit Event">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">
+                            <div class="event-info">
+                                <h4>Jazz Night Live</h4>
+                                <p class="event-category">Music & Entertainment</p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Concert</span>
+                                    <span class="event-tag">Jazz</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="date-time">
+                                <div class="date">Dec 25, 2024</div>
+                                <div class="time">8:00 PM - 11:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="venue-info">
+                                <div class="venue-name">Blue Note Club</div>
+                                <div class="venue-location">New York, NY</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="sales-progress">
+                                <div class="progress-info">
+                                    <span class="progress-text">89/120 sold</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 74%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="revenue-info">
+                                <div class="revenue-amount">$8,900</div>
+                                <div class="revenue-percentage">74% of target</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <span class="status-badge active">Active</span>
+                        </div>
+                        <div class="table-cell">
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline" title="Edit Event">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="past-tab">
+                <div class="events-table">
+                    <div class="table-header">
+                        <div class="table-cell">Event Details</div>
+                        <div class="table-cell">Date</div>
+                        <div class="table-cell">Venue</div>
+                        <div class="table-cell">Final Sales</div>
+                        <div class="table-cell">Revenue</div>
+                        <div class="table-cell">Performance</div>
+                        <div class="table-cell">Actions</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-cell">
+                            <div class="event-info">
+                                <h4>Rock Concert Series</h4>
+                                <p class="event-category">Music & Entertainment</p>
+                                <div class="event-tags">
+                                    <span class="event-tag">Concert</span>
+                                    <span class="event-tag">Rock</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="date">Nov 30, 2024</div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="venue-info">
+                                <div class="venue-name">Madison Square Garden</div>
+                                <div class="venue-location">New York, NY</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="final-sales">
+                                <span class="sales-number">18,500/18,500</span>
+                                <span class="sales-status sold-out">Sold Out</span>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <div class="revenue-info">
+                                <div class="revenue-amount">$185,000</div>
+                                <div class="revenue-percentage">100% of target</div>
+                            </div>
+                        </div>
+                        <div class="table-cell">
+                            <span class="status-badge completed">Excellent</span>
+                        </div>
+                        <div class="table-cell">
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline" title="View Analytics">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline" title="Download Report">
+                                    <i class="fas fa-file-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section class="reports-section" id="reports">
+            <div class="section-header">
+                <div class="header-content">
+                    <h2><i class="fas fa-file-alt"></i> Generate Reports</h2>
+                    <p>Create detailed reports for your events and business performance</p>
+                </div>
+            </div>
+            
+            <div class="reports-grid">
+                <div class="report-card">
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="report-info">
+                            <h3>Sales Report</h3>
+                            <p>Comprehensive analysis of ticket sales, revenue, and performance metrics</p>
+                        </div>
+                    </div>
+                    <div class="report-options">
+                        <div class="option-group">
+                            <label>Time Period</label>
+                            <select class="report-period">
+                                <option value="7">Last 7 days</option>
+                                <option value="30">Last 30 days</option>
+                                <option value="90">Last 90 days</option>
+                                <option value="365">Last year</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label>Event Selection</label>
+                            <select class="report-event">
+                                <option value="">All Events</option>
+                                <option value="tech-conf">Tech Conference 2024</option>
+                                <option value="jazz-night">Jazz Night Live</option>
+                                <option value="rock-concert">Rock Concert Series</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="report-action">
+                        <button class="btn btn-primary btn-generate">
+                            <i class="fas fa-chart-bar"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <div class="report-header">
+                        <div class="report-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="report-info">
+                            <h3>Attendee Report</h3>
+                            <p>Detailed insights about your audience demographics and behavior</p>
+                        </div>
+                    </div>
+                    <div class="report-options">
+                        <div class="option-group">
+                            <label>Event Selection</label>
+                            <select class="report-event">
+                                <option value="">All Events</option>
+                                <option value="tech-conf">Tech Conference 2024</option>
+                                <option value="jazz-night">Jazz Night Live</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label>Date Range</label>
+                            <select class="report-date">
+                                <option value="7">Last 7 days</option>
+                                <option value="30">Last 30 days</option>
+                                <option value="90">Last 90 days</option>
+                                <option value="365">Last year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="report-action">
+                        <button class="btn btn-primary btn-generate">
+                            <i class="fas fa-users"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Organizer Dashboard JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventTabs();
+            setupCharts();
+            setupReportGeneration();
+            setupMetrics();
+        });
+
+        // Setup event tabs functionality
+        function setupEventTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetTab = btn.getAttribute('data-tab');
+
+                    // Remove active class from all tabs and contents
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    btn.classList.add('active');
+                    document.getElementById(`${targetTab}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        // Setup charts using Chart.js
+        function setupCharts() {
+            setupRevenueChart();
+            setupTicketCategoryChart();
+            setupPeriodSelector();
+        }
+
+        // Revenue trend chart
+        function setupRevenueChart() {
+            const ctx = document.getElementById('revenueChart');
+            if (!ctx) return;
+
+            const revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Dec 1', 'Dec 5', 'Dec 10', 'Dec 15', 'Dec 20', 'Dec 25', 'Dec 30'],
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: [12500, 18900, 15600, 23400, 28700, 32100, 29800],
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Store chart reference globally for period updates
+            window.revenueChart = revenueChart;
+        }
+
+        // Ticket category chart
+        function setupTicketCategoryChart() {
+            const ctx = document.getElementById('ticketCategoryChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Concerts', 'Theatre', 'Cultural Events'],
+                    datasets: [{
+                        data: [45, 35, 20],
+                        backgroundColor: [
+                            '#667eea',
+                            '#764ba2',
+                            '#f093fb'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Setup period selector functionality
+        function setupPeriodSelector() {
+            const periodBtns = document.querySelectorAll('.period-btn');
+            
+            periodBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const period = this.getAttribute('data-period');
+                    
+                    // Update active button
+                    periodBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update chart data
+                    updateRevenueChart(window.revenueChart, period);
+                });
+            });
+        }
+
+        // Update revenue chart based on period
+        function updateRevenueChart(chart, period) {
+            let labels, data;
+            
+            switch(period) {
+                case '7':
+                    labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                    data = [4200, 5800, 3900, 7200, 8900, 10200, 9500];
+                    break;
+                case '30':
+                    labels = ['Dec 1', 'Dec 5', 'Dec 10', 'Dec 15', 'Dec 20', 'Dec 25', 'Dec 30'];
+                    data = [12500, 18900, 15600, 23400, 28700, 32100, 29800];
+                    break;
+                case '90':
+                    labels = ['Oct', 'Nov', 'Dec'];
+                    data = [89000, 156000, 247800];
+                    break;
+                case '365':
+                    labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    data = [89000, 92000, 98000, 105000, 112000, 118000, 125000, 132000, 140000, 148000, 156000, 247800];
+                    break;
+                default:
+                    labels = ['Dec 1', 'Dec 5', 'Dec 10', 'Dec 15', 'Dec 20', 'Dec 25', 'Dec 30'];
+                    data = [12500, 18900, 15600, 23400, 28700, 32100, 29800];
+            }
+            
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.update();
+        }
+
+        // Setup report generation
+        function setupReportGeneration() {
+            const reportButtons = document.querySelectorAll('.report-card .btn-primary');
+            
+            reportButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const reportCard = this.closest('.report-card');
+                    const reportTitle = reportCard.querySelector('h3').textContent;
+                    
+                    showNotification(`Generating ${reportTitle}...`, 'info');
+                    
+                    // Simulate report generation
+                    setTimeout(() => {
+                        showNotification(`${reportTitle} generated successfully!`, 'success');
+                    }, 2000);
+                });
+            });
+        }
+
+        // Setup metrics and performance tracking
+        function setupMetrics() {
+            // Animate metric numbers on page load
+            const metricValues = document.querySelectorAll('.metric-value');
+            
+            metricValues.forEach(metric => {
+                const finalValue = metric.textContent;
+                const numericValue = parseFloat(finalValue.replace(/[$,]/g, ''));
+                
+                if (!isNaN(numericValue)) {
+                    animateNumber(metric, 0, numericValue, finalValue);
+                }
+            });
+
+            // Add hover effects to metric cards
+            const metricCards = document.querySelectorAll('.metric-card');
+            metricCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        // Animate number counting
+        function animateNumber(element, start, end, finalText) {
+            const duration = 2000;
+            const startTime = performance.now();
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                
+                if (finalText.includes('$')) {
+                    element.textContent = '$' + current.toLocaleString();
+                } else {
+                    element.textContent = current.toLocaleString();
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    element.textContent = finalText;
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            const iconClass = type === 'success' ? 'fas fa-check-circle' : 
+                             type === 'error' ? 'fas fa-exclamation-circle' : 
+                             'fas fa-info-circle';
+            
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="${iconClass}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+            
+            // Close button functionality
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+
+        // Create event functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-primary') && e.target.closest('.btn-primary').textContent.includes('Create New Event')) {
+                e.preventDefault();
+                showNotification('Redirecting to event creation page...', 'info');
+                
+                // In a real app, this would redirect to event creation form
+                setTimeout(() => {
+                    showNotification('Event creation feature coming soon!', 'info');
+                }, 1000);
+            }
+        });
+
+        // Filter functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-outline') && e.target.closest('.btn-outline').textContent.includes('Filter')) {
+                e.preventDefault();
+                showNotification('Filter options coming soon!', 'info');
+            }
+        });
+
+        // Event action buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.action-buttons .btn')) {
+                const button = e.target.closest('.action-buttons .btn');
+                const action = button.textContent.trim() || button.querySelector('i').className;
+                
+                if (action.includes('Edit') || action.includes('fa-edit')) {
+                    showNotification('Opening event editor...', 'info');
+                } else if (action.includes('Stats') || action.includes('fa-chart-bar')) {
+                    showNotification('Loading event statistics...', 'info');
+                } else if (action.includes('View Report') || action.includes('fa-file-alt')) {
+                    showNotification('Generating event report...', 'info');
+                }
+            }
+        });
+
+        // Enhanced table row interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableRows = document.querySelectorAll('.table-row');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function(e) {
+                    // Don't trigger if clicking on action buttons
+                    if (!e.target.closest('.action-buttons')) {
+                        const eventName = this.querySelector('.event-info h4').textContent;
+                        showNotification(`Viewing details for: ${eventName}`, 'info');
+                    }
+                });
+                
+                // Add cursor pointer to indicate clickable rows
+                row.style.cursor = 'pointer';
+            });
+        });
+    </script>
+}

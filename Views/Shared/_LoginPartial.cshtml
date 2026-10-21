@@ -1,0 +1,27 @@
+﻿@{
+    var userId = Context.Session.GetString("UserId");
+    var userEmail = Context.Session.GetString("UserEmail");
+    var userFullName = Context.Session.GetString("UserFullName");
+}
+
+@if (!string.IsNullOrEmpty(userId))
+{
+    <div class="user-info">
+        <div class="user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="user-details">
+            <span class="user-name">@userFullName</span>
+        </div>
+        <form class="logout-form" asp-controller="Authentication" asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-outline btn-sm">Sign Out</button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="nav-actions">
+        <a asp-area="" asp-controller="Authentication" asp-action="Login" class="btn btn-outline">Sign In</a>
+        <a asp-area="" asp-controller="Authentication" asp-action="Register" class="btn btn-primary">Sign Up</a>
+    </div>
+}

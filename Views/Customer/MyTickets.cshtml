@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "My Tickets - ETicketing System";
+}
+
+<div class="container">
+    <div class="page-header">
+        <h1>My Tickets</h1>
+        <p>View and manage your booked tickets</p>
+    </div>
+
+    <div class="tickets-section">
+        <div class="no-tickets">
+            <div class="no-tickets-icon">
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+            <h3>No tickets yet</h3>
+            <p>You haven't booked any tickets yet. Start exploring amazing events!</p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Browse Events</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.tickets-section {
+    background: white;
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.no-tickets-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+}
+
+.no-tickets h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.no-tickets p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+</style>

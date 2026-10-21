@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ETicketing System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/page-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EventTicketingWebApp.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-ticket-alt"></i>
+                <span>ETicketing</span>
+            </div>
+            <div class="nav-menu">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">Events</a>
+                @{
+                    var userId = Context.Session.GetString("UserId");
+                    var userRole = Context.Session.GetString("UserRole");
+                    var isCustomer = !string.IsNullOrEmpty(userId) && userRole == "Customer";
+                }
+                @if (isCustomer)
+                {
+                    <a asp-controller="Customer" asp-action="MyTickets" class="nav-link">My Tickets</a>
+                    <a asp-controller="Customer" asp-action="MyProfile" class="nav-link">My Profile</a>
+                }
+                <a href="#" class="nav-link">Contact</a>
+            </div>
+            <div class="nav-actions">
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ETicketing</h4>
+                    <p>Your one-stop destination for event tickets</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope"></i> info@eticketing.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Event Street, City, State</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ETicketing System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/page-auth.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

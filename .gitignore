@@ -1,0 +1,35 @@
+# .NET Ignore patterns
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet's cache folders
+# NuGet V3
+# https://docs.nuget.org/consume/nuget-exe-and-source#caching-behavior
+**/nuget**/cache/
+
+# Node.js
+node_modules/
+npm-debug.log
+
+# MATLAB
+.MATLAB/
+
+# PowerShell profiles
+# PowerShell Profile
+PowerShell_Profile.ps1
+
+# Security
+# Secret keys, tokens, etc.
+*.pem
+*.key
+*.cert
+
+# OS-specific
+.DS_Store
+Thumbs.db
